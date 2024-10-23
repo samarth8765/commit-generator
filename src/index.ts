@@ -1,5 +1,7 @@
-import { getCommitSuggestions } from './ai/gemini.ts';
+import { getCommitSuggestions } from './ai/gemini';
 import { execSync } from 'node:child_process';
+import inquirer from 'inquirer';
+import clipboardy from 'clipboardy';
 
 const getGitDiff = (): string => {
   try {
@@ -25,8 +27,21 @@ const main = async () => {
 
   if (commitSuggestions.length > 0) {
     console.log('Commit message suggestions:');
-    commitSuggestions.forEach((msg, index) =>
-      console.log(`${index + 1}. ${msg}`)
+
+    const { selectedCommit } = await inquirer.prompt([
+      {
+        type: 'list',
+        name: 'selectedCommit',
+        message: 'Select the commit message to use:',
+        choices: commitSuggestions
+      }
+    ]);
+
+    const commitCommand = `git commit -m "${selectedCommit}"`;
+    clipboardy.writeSync(commitCommand);
+
+    console.log(
+      `Your selected commit command has been copied to the clipboard: ${commitCommand}`
     );
   } else {
     console.log('No commit suggestions were generated.');

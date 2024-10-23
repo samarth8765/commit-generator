@@ -2,15 +2,11 @@ import fs from 'node:fs';
 import path from 'node:path';
 import readline from 'node:readline';
 
-// Path where the API key will be stored
 const CONFIG_PATH = path.join(
   process.env.HOME || process.env.USERPROFILE || '',
   '.ai-commit-config'
 );
 
-/**
- * Load the API key from a local config file.
- */
 export const loadApiKey = (): string | null => {
   try {
     if (fs.existsSync(CONFIG_PATH)) {
@@ -24,9 +20,6 @@ export const loadApiKey = (): string | null => {
   }
 };
 
-/**
- * Save the API key to the local config file.
- */
 export const saveApiKey = (apiKey: string): void => {
   const config = { apiKey };
   try {
@@ -37,9 +30,6 @@ export const saveApiKey = (apiKey: string): void => {
   }
 };
 
-/**
- * Prompt the user to enter their API key and return it.
- */
 export const promptForApiKey = async (): Promise<string> => {
   const rl = readline.createInterface({
     input: process.stdin,

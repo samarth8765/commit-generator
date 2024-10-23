@@ -43,6 +43,8 @@ export const getCommitSuggestions = async (
         "Third commit suggestion"
       ]
     }
+
+    Please gemini I'm requesting you to return the json format please just the json format.
   `;
 
   try {

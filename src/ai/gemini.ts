@@ -21,30 +21,49 @@ export const getCommitSuggestions = async (
   const genAI = new GoogleGenerativeAI(apiKey);
 
   const formattedPrompt = `
-    Based on the following git diff:
-    ${diff}
+  As an expert Git commit message writer, analyze this git diff and generate semantic, conventional commits following best practices:
 
-    Between "START" and "END" is an optional additional context to guide the commit suggestions. 
-    If nothing is between "START" and "END", ignore it.
+  DIFF:
+  ${diff}
 
-    START
-    ${prompt ? `Additional context: ${prompt}` : ''}
-    END
+  CONTEXT:
+  ${prompt ? prompt : 'No additional context provided'}
 
-    Please generate 4 concise one liner commit messges and clear commit message suggestions for the above changes.
-    Return the commit messages in the following JSON format:
-    Listen strictly respond only in json format and it should be response = 
-    Only the below format no other character or text just follow below format
+  Requirements for commit messages:
+  1. Follow the Conventional Commits specification (type(scope): description)
+  2. Use types: feat, fix, refactor, style, docs, test, chore
+  3. Include scope when clear from the changes
+  4. Keep each message under 72 characters
+  5. Use imperative mood ("add" not "added")
+  6. Focus on WHY and WHAT, not HOW
+  7. Highlight key impacts and breaking changes
+  8. Be specific but concise
+  
+  Analyze the changes for:
+  - New features or functionality added
+  - Bugs fixed
+  - Code refactoring or improvements
+  - Style/formatting changes
+  - Documentation updates
+  - Test modifications
+  - Build/dependency changes
 
-    {
-      "commits": [
-        "First commit suggestion",
-        "Second commit suggestion",
-        "Third commit suggestion"
-      ]
-    }
+  Return EXACTLY 4 commit message suggestions in this JSON format:
+  {
+    "commits": [
+      "feat(scope): concise description of main feature change",
+      "fix(scope): specific bug fix description",
+      "refactor(scope): what was improved and why",
+      "style(scope): what was reformatted or styled"
+    ]
+  }
 
-    Please gemini I'm requesting you to return the json format please just the json format.
+  RULES:
+  - ONLY return valid JSON
+  - NO explanations or additional text
+  - EXACTLY 4 suggestions
+  - Each message MUST be complete and meaningful
+  - NEVER include placeholder text
   `;
 
   try {

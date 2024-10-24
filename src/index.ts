@@ -3,7 +3,7 @@
 import { getCommitSuggestions } from './ai/gemini';
 import { execSync } from 'node:child_process';
 import inquirer from 'inquirer';
-import clipboardy from 'clipboardy';
+import ncp from 'copy-paste';
 import chalk from 'chalk';
 
 interface GitStatus {
@@ -69,7 +69,10 @@ const getGitDiff = (): string => {
     }
     return diff;
   } catch (error) {
-    console.error(chalk.red('Error fetching git diff:'), error);
+    console.error(
+      chalk.red('Error fetching git diff:'),
+      (error as Error).message
+    );
     process.exit(1);
   }
 };
@@ -122,7 +125,10 @@ const confirmAndExecute = async (commitCommand: string): Promise<void> => {
         console.log(chalk.green('\n🚀 Changes pushed successfully!'));
       }
     } catch (error) {
-      console.error(chalk.red('\n❌ Error executing git command:'), error);
+      console.error(
+        chalk.red('\n Error executing git command:'),
+        (error as Error).message
+      );
     }
   } else {
     console.log(
@@ -163,14 +169,14 @@ const main = async () => {
     ]);
 
     const commitCommand = `git commit -m "${selectedCommit}"`;
-    await clipboardy.write(commitCommand);
+    ncp.copy(commitCommand);
 
     console.log(chalk.cyan('\n📋 Command copied to clipboard:'));
     console.log(chalk.white(commitCommand));
 
     await confirmAndExecute(commitCommand);
   } else {
-    console.log(chalk.red('\n❌ No commit suggestions were generated.'));
+    console.log(chalk.red('\n No commit suggestions were generated.'));
   }
 };
 

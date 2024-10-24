@@ -14,9 +14,7 @@ interface GitStatus {
 
 const getGitStatus = (): GitStatus => {
   try {
-    const branch = execSync('git rev-parse --abbrev-ref HEAD')
-      .toString()
-      .trim();
+    const branch = execSync('git branch --show-current').toString().trim();
 
     const stagedStatus = execSync('git diff --cached --name-only').toString();
 
@@ -51,11 +49,7 @@ const getGitDiff = (): string => {
             message: 'Choose an action:',
             choices: [
               { name: '1. Stage all changes', value: 'stageAll' },
-              {
-                name: '2. Stage changes interactively',
-                value: 'stageInteractive'
-              },
-              { name: '3. Exit\n', value: 'exit' }
+              { name: '2. Exit\n', value: 'exit' }
             ]
           }
         ])
@@ -64,10 +58,6 @@ const getGitDiff = (): string => {
             case 'stageAll':
               execSync('git add .');
               console.log(chalk.green('\n✔ All changes staged'));
-              main();
-              break;
-            case 'stageInteractive':
-              execSync('git add -i', { stdio: 'inherit' });
               main();
               break;
             case 'exit':
@@ -173,7 +163,7 @@ const main = async () => {
     ]);
 
     const commitCommand = `git commit -m "${selectedCommit}"`;
-    clipboardy.writeSync(commitCommand);
+    await clipboardy.write(commitCommand);
 
     console.log(chalk.cyan('\n📋 Command copied to clipboard:'));
     console.log(chalk.white(commitCommand));
@@ -184,9 +174,8 @@ const main = async () => {
   }
 };
 
-// Handle errors gracefully
 process.on('uncaughtException', (error) => {
-  console.error(chalk.red('\n❌ An unexpected error occurred:'), error);
+  console.error(chalk.red('\n An unexpected error occurred:'), error.message);
   process.exit(1);
 });
 

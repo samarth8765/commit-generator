@@ -48,7 +48,7 @@ export const getCommitSuggestions = async (
   - Test modifications
   - Build/dependency changes
 
-  Return EXACTLY 4 commit message suggestions in this JSON format:
+  Return EXACTLY 4 commit (not less than 4) message suggestions in this JSON format:
   {
     "commits": [
       "feat(scope): concise description of main feature change",

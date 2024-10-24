@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import { getCommitSuggestions } from './ai/gemini';
 import { execSync } from 'node:child_process';
 import inquirer from 'inquirer';
@@ -53,7 +55,7 @@ const getGitDiff = (): string => {
                 name: '2. Stage changes interactively',
                 value: 'stageInteractive'
               },
-              { name: '3. Exit', value: 'exit' }
+              { name: '3. Exit\n', value: 'exit' }
             ]
           }
         ])

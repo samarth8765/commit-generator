@@ -1,7 +1,38 @@
 {
-  "name": "commit-generator",
-  "module": "index.ts",
+  "name": "@vizzz/ai-commit-generator",
+  "version": "1.0.2",
+  "description": "A tool to generate commit messages",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
   "type": "module",
+  "bin": {
+    "ai-commit-generator": "./dist/index.js"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "bun build ./src/index.ts --outdir ./dist --target node --declaration"
+  },
+  "keywords": [
+    "commit",
+    "generator",
+    "git",
+    "ai",
+    "commit-message",
+    "cli"
+  ],
+  "author": "vizzz",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/samarth8765/commit-generator"
+  },
+  "bugs": {
+    "url": "https://github.com/samarth8765/commit-generator/issues"
+  },
+  "homepage": "https://github.com/samarth8765/commit-generator#readme",
   "devDependencies": {
     "@types/bun": "latest"
   },

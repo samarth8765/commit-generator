@@ -68,7 +68,7 @@ export const getCommitSuggestions = async (
   `;
 
 	try {
-		const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+		const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash-lite" });
 		const result = await model.generateContent(formattedPrompt);
 
 		let rawResponse = result.response.text();

@@ -1,0 +1,56 @@
+name: Publish to NPM
+
+on:
+  push:
+    tags:
+      - 'v*' # Trigger on version tags like v1.0.6
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install Dependencies
+        run: bun install
+
+      - name: Get current version from NPM
+        id: get-npm-version
+        run: |
+          NPM_VERSION=$(npm view @vizzz/ai-commit-generator version || echo "0.0.0")
+          echo "npm_version=$NPM_VERSION" >> $GITHUB_OUTPUT
+
+      - name: Compare and bump if needed
+        run: |
+          PACKAGE_VERSION=$(node -p "require('./package.json').version")
+          NPM_VERSION="${{ steps.get-npm-version.outputs.npm_version }}"
+
+          echo "package.json version: $PACKAGE_VERSION"
+          echo "npm published version: $NPM_VERSION"
+
+          if [ "$PACKAGE_VERSION" = "$NPM_VERSION" ]; then
+            echo "🔄 Version already exists. Bumping patch..."
+            npm version patch --no-git-tag-version
+          else
+            echo "✅ New version. Proceeding."
+          fi
+
+      - name: Build Project
+        run: bun run build
+
+      - name: Publish to NPM
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: npm publish --access public

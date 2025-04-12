@@ -17,6 +17,8 @@ You can install the AI Commit Generator via npm:
 ```bash
 npm install -g @vizzz/ai-commit-generator
 ```
+GEMINI API KEY - ***********************************
+
 
 Alternatively, you can visit the <a href="https://www.npmjs.com/package/@vizzz/ai-commit-generator" target="_blank">NPM Package page</a> for more details.
 
